@@ -1,0 +1,12 @@
+import "./App.css";
+import canvas from "../src/components/canvas";
+
+function App() {
+  return (
+    <div>
+      <h1 className="title">Hello World!</h1>
+    </div>
+  );
+}
+
+export default App;
