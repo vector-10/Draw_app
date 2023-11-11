@@ -1,0 +1,16 @@
+{
+  "name": "draw_app",
+  "version": "1.0.0",
+  "description": "A real-time collaboration app that lets you draw with other artists!!!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}

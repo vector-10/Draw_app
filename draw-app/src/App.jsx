@@ -1,10 +1,10 @@
 import "./App.css";
-import canvas from "../src/components/canvas";
+import Sketchboard from "./components/Sketchboard";
 
 function App() {
   return (
     <div>
-      <h1 className="title">Hello World!</h1>
+      <Sketchboard />
     </div>
   );
 }
