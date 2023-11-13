@@ -7,8 +7,9 @@ const Sketchboard = () => {
   //set state for elements and sketching to an empty array and value fo false to be later changed
   const [elements, setElements] = useState([]);
   const [sketching, setSketching] = useState(false);
+  const [selectedElement, setSelectedElements] = useState(null);
   const [action, setAction] = useState(null);
-  const [selectedElement, setSelectedElement] = useState()
+
   //create a state for tool and set it to line tool  by default
   const [tool, setTool] = useState("line");
   // The useLayoutEffect is resposible for rendering drawing elements
