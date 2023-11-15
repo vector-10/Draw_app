@@ -1,13 +1,46 @@
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
-// Create a RoughJS generator instance
-const generator = rough.generator();
+import PropTypes from "prop-types";
+import {io} from "socket.io-client";
+
 const WhiteBoard = () => {
   // State for managing drawing elements and interactions
   const [elements, setElements] = useState([]);
   const [selectedElement, setSelectedElement] = useState(null);
   const [action, setAction] = useState("");
   const [tool, setTool] = useState("line");
+  const [socket, setSocket] = useState(null);
+
+
+  useEffect(() => {
+    // Define the server URL
+    const server = "http://localhost:4000";
+    // Configuration options for the socket connection
+    const connectionParameters = {
+     "force new connection": true,
+     reconnectionAttempts: "Infinity",
+     timeout: 10000,
+     transports: ["websocket"],
+    };
+    // Establish a new socket connection
+    const newSocketConnection = io(server, connectionParameters);
+    setSocket(newSocketConnection);
+    // Event listener for successful connection
+    newSocketConnection.on("connect", () => {
+     console.log("Connected to newSocket.io server!");
+    });
+    // Event listener for receiving served elements from the server
+    newSocketConnection.on("servedElements", (elementsCopy) => {
+     setElements(elementsCopy.elements);
+    });
+    // Clean up the socket connection when the component is unmounted
+    return () => {
+     newSocketConnection.disconnect();
+    };
+   }, []);
+
+  // Create a RoughJS generator instance
+  const generator = rough.generator();
   // UseLayoutEffect: Responsible for rendering drawing elements
   useLayoutEffect(() => {
     // Get the canvas element by its ID
@@ -91,6 +124,7 @@ const WhiteBoard = () => {
       // Create a new drawing element when mouse down is detected
       const element = createElement(clientX, clientY, clientX, clientY);
       setElements((prevState) => [...prevState, element]);
+      socket.emit("startDrawing", element);
     }
   };
   // Event handler for mouse move
@@ -190,5 +224,9 @@ const WhiteBoard = () => {
     </>
   );
 };
+
+WhiteBoard.propTypes = {
+  socket: PropTypes.object.isRequired,
+  emit:PropTypes.object};
 
 export default WhiteBoard;
