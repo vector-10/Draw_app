@@ -1,40 +1,46 @@
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
 const app = express();
-const http = require('http');
-const server = http.createServer(app);
+const PORT  = process.env.PORT || 5000
 
-const { Server } = require('socket.io');
-const io = new Server(server, {
-    cors: {
-        // Allow cross origin resource sharing for front end resource
-        origin: "http://localhost:5173", 
-        AccessControlAllowOrigin: "http://localhost:5173",
-        allowedHeaders: ["Access-Control-Allow-Origin"],
-        credentials: true,
-       },
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const httpServer = createServer();
+
+const io = new Server(httpServer, {cors:{
+    origin: 'http://localhost:3000',
+    AccessControlAllowOrigin: 'http://localhost:3000',
+    allowedHeaders: ["Access-Control-Allow-Origin"],
+    credentials: true
+  }});
+
+  let connections = []
+  let elements;
+  io.on('connect', (socket) => {
+      connections.push(socket);
+
+      console.log(`${socket.id} has connected`)
+      
+      socket.on('elements', (data) => {
+        elements = data
+          connections.forEach(con => {
+              if (con.id !== socket.id) {
+                  con.emit('servedElements', {elements})
+              }
+          })
+      })
+      
+      socket.on('down', (data) => {
+          connections.forEach(con => {
+              if (con.id !== socket.id) {
+                  con.emit('ondown', {x: data.x, y: data.y})
+              }
+          })
+      })
+  })
+  
+
+httpServer.listen(PORT, () => {
+    console.log(`listening on ${PORT}`)
 });
-
-io.on('connection', (socket) => {
-    console.log(`A socket connection to the server has been made: ${socket.id}`);
-
-    socket.on('draw', (data) => {
-        //broadcasting the drawing to toher clients
-        socket.broadcast.emit('draw', data)
-    });
-
-    socket.on('disconnect', () => {
-        console.log(`Socket disconnected with ID ${socket.id}`);
-    });
-
-})
-
-
-app.get("/", (req, res) => {
-    res.json({
-        message: "Successfully connected to the Server"
-    })
-});
-const PORT = 4000 || process.env.PORT;
-server.listen(PORT, ()=> {
-    console.log(` server is listening on port ${PORT}`);
-})
