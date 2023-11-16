@@ -1,46 +1,37 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
-const PORT  = process.env.PORT || 5000
+const http = require('http');
+const server = http.createServer(app);
+const bodyParser = require('body-parser');
 
-const { createServer } = require("http");
-const { Server } = require("socket.io");
+const { Server } = require('socket.io');
+const io = new Server(server, {
+    cors: {
+        origin:[ "*", "http://localhost:5173"]
+    }
+})
 
-const httpServer = createServer();
 
-const io = new Server(httpServer, {cors:{
-    origin: 'http://localhost:3000',
-    AccessControlAllowOrigin: 'http://localhost:3000',
-    allowedHeaders: ["Access-Control-Allow-Origin"],
-    credentials: true
-  }});
+app.use(bodyParser.json());
 
-  let connections = []
-  let elements;
-  io.on('connect', (socket) => {
-      connections.push(socket);
 
-      console.log(`${socket.id} has connected`)
-      
-      socket.on('elements', (data) => {
-        elements = data
-          connections.forEach(con => {
-              if (con.id !== socket.id) {
-                  con.emit('servedElements', {elements})
-              }
-          })
-      })
-      
-      socket.on('down', (data) => {
-          connections.forEach(con => {
-              if (con.id !== socket.id) {
-                  con.emit('ondown', {x: data.x, y: data.y})
-              }
-          })
-      })
-  })
-  
+io.on("connection", (socket) => {
+  console.log(
+    `A connection has been made to the socket server with ID ${socket.id}`
+  );
 
-httpServer.listen(PORT, () => {
-    console.log(`listening on ${PORT}`)
+  socket.on("draw", (data) => {
+    // to emit the broadcast to other clients
+    socket.broadcast.emit("draw", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`Socket disconnected with ID ${socket.id}`);
+  });
+});
+
+const PORT = process.env.PORT || 4000;
+
+server.listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
 });
