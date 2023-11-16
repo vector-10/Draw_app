@@ -1,15 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
-import { io } from "socket.io-client";
-
-const socket = io.connect("http://localhost:4000");
+import PropTypes from "prop-types";
 
 // Create a RoughJS generator instance
 const generator = rough.generator();
 
 // Board Component: Handles collaborative drawing on canvas
-const Board = () => {
+const Board = ({ socket }) => {
   // State for managing drawing elements and interactions
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
@@ -75,7 +73,7 @@ const Board = () => {
       }
     });
   };
-    
+
   // Event handler for mouse down
   const handleMouseDown = (e) => {
     const { clientX, clientY } = e;
@@ -143,6 +141,13 @@ const Board = () => {
     }
   };
 
+  
+  // Handle the reception of drawing data from other clients
+  const handleDraw = (data) => {
+    setElements(data);
+  };
+
+
   // Listen for the 'draw' event from the server to update the drawing
   useEffect(() => {
     socket.on("draw", (data) => {
@@ -152,7 +157,7 @@ const Board = () => {
     return () => {
       socket.off("draw");
     };
-  }, []);
+  }, [socket]);
 
   // Event handler for mouse up
   const handleMouseUp = () => {
@@ -198,6 +203,14 @@ const Board = () => {
       ></canvas>
     </>
   );
+};
+
+Board.propTypes = {
+  socket: PropTypes.shape({
+    emit: PropTypes.object,
+    on: PropTypes.object,
+    off: PropTypes.object,
+  }),
 };
 
 export default Board;
