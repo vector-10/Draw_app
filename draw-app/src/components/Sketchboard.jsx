@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 const generator = rough.generator();
 
 // Board Component: Handles collaborative drawing on canvas
-const Board = ({ socket }) => {
+const Board = ({socket}) => {
   // State for managing drawing elements and interactions
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
@@ -141,13 +141,6 @@ const Board = ({ socket }) => {
     }
   };
 
-  
-  // Handle the reception of drawing data from other clients
-  const handleDraw = (data) => {
-    setElements(data);
-  };
-
-
   // Listen for the 'draw' event from the server to update the drawing
   useEffect(() => {
     socket.on("draw", (data) => {
@@ -206,11 +199,11 @@ const Board = ({ socket }) => {
 };
 
 Board.propTypes = {
-  socket: PropTypes.shape({
-    emit: PropTypes.object,
-    on: PropTypes.object,
-    off: PropTypes.object,
-  }),
-};
+    socket: PropTypes.shape({
+        emit:PropTypes.object,
+        on: PropTypes.object,
+        off:PropTypes.object
+    })
+}
 
 export default Board;
