@@ -22,29 +22,29 @@ const Login = () => {
                           alt="logo"
                         />
                         <h4 className="mt-1 mb-5 pb-1">
-                          We are The Lotus Team
+                           The Lotus 
                         </h4>
                       </div>
 
                       <form>
                         <p>Please login to your account</p>
 
-                        <div className="form-outline mb-4">
+                        <div className="form-outline mb-2">
                           <input
                             type="email"
                             id="form2Example11"
                             className="form-control"
-                            placeholder="Phone number or email address"
+                            placeholder=" email address"
                           />
                           <label
                             className="form-label"
                             htmlFor="form2Example11"
                           >
-                            Username
+                            Email
                           </label>
                         </div>
 
-                        <div className="form-outline mb-4">
+                        <div className="form-outline mb-2">
                           <input
                             type="password"
                             id="form2Example22"
@@ -65,9 +65,7 @@ const Login = () => {
                           >
                             Log in
                           </button>
-                          <a className="text-muted" href="#!">
-                            Forgot password?
-                          </a>
+                       
                         </div>
 
                         <div className="d-flex align-items-center justify-content-center pb-4">
@@ -88,8 +86,7 @@ const Login = () => {
                       <p className="small mb-0">
                         Hey there!, welcome back to The Lotus. Your online
                         collaborative sketchboard. We hope you are enjoying your time with us, 
-                        keep expanding your network and explore new features to enable you .
-           
+                        keep expanding your network and explore new features to enable you.           
                       </p>
                     </div>
                   </div>
