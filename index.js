@@ -21,6 +21,9 @@ io.on("connection", (socket) => {
   );
 
   socket.on("draw", (data) => {
+    // Log the drawing data when received
+    console.log("Drawing data received:", { data, senderSocketId: socket.id });
+
     // to emit the broadcast to other clients
     socket.broadcast.emit("draw", data);
   });

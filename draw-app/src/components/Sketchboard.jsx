@@ -8,6 +8,7 @@ const generator = rough.generator();
 
 // Board Component: Handles collaborative drawing on canvas
 const Board = ({socket}) => {
+
   // State for managing drawing elements and interactions
   const [elements, setElements] = useState([]);
   const [action, setAction] = useState("none");
@@ -95,10 +96,14 @@ const Board = ({socket}) => {
         clientY,
         clientX,
         clientY,
-        tool
+        tool,
+        socket.id
       );
+      console.log("Drawing data emmitted", {element, ID:socket.id});
       setElements((prevState) => [...prevState, element]);
       setAction("drawing");
+      socket.emit('draw', element);
+      
     }
   };
 
@@ -141,16 +146,28 @@ const Board = ({socket}) => {
     }
   };
 
-  // Listen for the 'draw' event from the server to update the drawing
-  useEffect(() => {
-    socket.on("draw", (data) => {
-      setElements((prevElements) => [...prevElements, data]);
-    });
 
-    return () => {
-      socket.off("draw");
-    };
-  }, [socket]);
+// Listen for the 'draw' event from the server to update the drawing
+useEffect(() => {
+  socket.on("draw", (data) => {
+    // Log the drawing data received on the client side
+    console.log("Drawing data received on client:", data);
+
+    // Check if the senderSocketId matches the current client's socket ID
+    const isLocalDraw = data.senderSocketId === socket.id;
+
+    // Update the drawing only if it's not from the current client
+    if (!isLocalDraw) {
+      setElements([ data]);
+    }
+  });
+
+  return () => {
+    socket.off("draw");
+  };
+}, [socket]);
+
+
 
   // Event handler for mouse up
   const handleMouseUp = () => {
@@ -199,11 +216,12 @@ const Board = ({socket}) => {
 };
 
 Board.propTypes = {
-    socket: PropTypes.shape({
-        emit:PropTypes.object,
-        on: PropTypes.object,
-        off:PropTypes.object
-    })
-}
+  socket: PropTypes.shape({
+    emit: PropTypes.func.isRequired,
+    on: PropTypes.func.isRequired,
+    off: PropTypes.func.isRequired,
+  }),
+};
+
 
 export default Board;
