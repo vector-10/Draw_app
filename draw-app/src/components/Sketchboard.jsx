@@ -142,8 +142,15 @@ const Board = ({socket}) => {
       const newY = clientY - offsetY;
       updateElement(id, newX, newY, newX + width, newY + height, elementType);
       // Emit the draw event to the server
-      socket.emit("draw", selectedElement);
+      // socket.emit("draw", selectedElement);
     }
+  };
+
+    // Event handler for mouse up
+    const handleMouseUp = () => {
+      // Emit the complete set of elements to the server after drawing is complete
+    setAction("none");
+    setSelectedElement(null);
   };
 
 
@@ -158,7 +165,7 @@ useEffect(() => {
 
     // Update the drawing only if it's not from the current client
     if (!isLocalDraw) {
-      setElements([ data]);
+      setElements((prevElements) => [...prevElements, data]);
     }
   });
 
@@ -169,11 +176,7 @@ useEffect(() => {
 
 
 
-  // Event handler for mouse up
-  const handleMouseUp = () => {
-    setAction("none");
-    setSelectedElement(null);
-  };
+
 
   // Return JSX to render the collaborative canvas
   return (
