@@ -73,8 +73,11 @@ const Board = () => {
       if (elementType === 'line') {
           roughElement = generator.line(x1, y1, x2, y2);
       } else if (elementType === 'rect') {
-          roughElement = generator.rectangle(x1, y1, x2-x1, y2-y1);
-      };
+          roughElement = generator.rectangle(x1, y1, x2-x1, y2-y1, { fill: 'red'});
+      }else if ( elementType === ' circle') {
+        const radiusOfCircle = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+        roughElement = generator.circle(x1, y1, radiusOfCircle)
+      }
   
       // Return an object representing the element, including its coordinates and RoughJS representation
       return {id, elementType, x1, y1, x2, y2, roughElement };
@@ -115,8 +118,13 @@ const Board = () => {
       } else {
           const { clientX, clientY } = e;
           const id = elements.length;
+          let element;
           // Create a new drawing element when mouse down is detected
-          const element = createElement(id, clientX, clientY, clientX, clientY, tool);
+          if(tool === circle){
+            element === createElement(id, clientX, clientY, clientX, clientY, tool);
+          } else {
+            element === createElement(id, clientX, clientY, clientX, clientY, tool);
+          }
           setElements(prevState => [...prevState, element]);
           setAction('drawing');
       }
@@ -190,6 +198,13 @@ const Board = () => {
             onChange={() => setTool("rect")}
           />
           <label htmlFor="rectangle">Rectangle</label>
+          <input
+            type="radio"
+            id="circle"
+            checked={tool === "circle"}
+            onChange={() => setTool("circle")}
+          />
+          <label htmlFor="circle">Circle</label>
         </div>
       </div>
       <canvas
@@ -204,13 +219,6 @@ const Board = () => {
   );
 };
 
-// Board.propTypes = {
-//   socket: PropTypes.shape({
-//     emit: PropTypes.func.isRequired,
-//     on: PropTypes.func.isRequired,
-//     off: PropTypes.func.isRequired,
-//   }),
-// };
 
 
 export default Board;
