@@ -71,12 +71,12 @@ const Board = () => {
       let roughElement;
       // Use the RoughJS generator to create a rough element (line or rectangle)
       if (elementType === 'line') {
-          roughElement = generator.line(x1, y1, x2, y2);
+          roughElement = generator.line(x1, y1, x2, y2, {stroke: 'blue'});
       } else if (elementType === 'rect') {
           roughElement = generator.rectangle(x1, y1, x2-x1, y2-y1, { fill: 'red'});
-      }else if ( elementType === ' circle') {
-        const radiusOfCircle = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
-        roughElement = generator.circle(x1, y1, radiusOfCircle)
+      } else if ( elementType === 'circle') {
+        const radius = Math.sqrt(Math.pow(x2 -x1, 2) +  Math.pow(y2 -y1, 2));
+        roughElement = generator.circle( x1, y1, radius, {fill:'yellow'})
       }
   
       // Return an object representing the element, including its coordinates and RoughJS representation
@@ -95,7 +95,10 @@ const Board = () => {
           const minY = Math.min(y1, y2);
           const maxY = Math.max(y1, y2);
           return x >= minX && x <= maxX && y >= minY && y <= maxY;
-      } else {
+      } else if (elementType === "circle") {
+        const radius = Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
+        return distance({ x: x1, y: y1 }, { x, y }) <= radius;
+      }       else {
           const a = {x: x1, y: y1};
           const b = {x: x2, y: y2};
           const c = {x, y};
@@ -115,19 +118,21 @@ const Board = () => {
               setSelectedElement({...element, offsetX, offsetY}) 
               setAction('moving');
           }
+      } else if (tool === "circle") {
+        const { clientX, clientY } = e;
+        const id = elements.length;
+        const element = createElement(id, clientX, clientY, clientX, clientY, tool);
+        setElements((prevState) => [...prevState, element]);
+        setAction("drawing");
       } else {
           const { clientX, clientY } = e;
           const id = elements.length;
-          let element;
           // Create a new drawing element when mouse down is detected
-          if(tool === circle){
-            element === createElement(id, clientX, clientY, clientX, clientY, tool);
-          } else {
-            element === createElement(id, clientX, clientY, clientX, clientY, tool);
-          }
+          const element = createElement(id, clientX, clientY, clientX, clientY, tool);
           setElements(prevState => [...prevState, element]);
           setAction('drawing');
       }
+
   };
 
   const updateElement = (id, x1, y1, x2, y2, tool) => {
@@ -204,7 +209,7 @@ const Board = () => {
             checked={tool === "circle"}
             onChange={() => setTool("circle")}
           />
-          <label htmlFor="circle">Circle</label>
+          <label htmlFor="rectangle">Circle</label>
         </div>
       </div>
       <canvas
@@ -218,6 +223,7 @@ const Board = () => {
     </>
   );
 };
+
 
 
 
