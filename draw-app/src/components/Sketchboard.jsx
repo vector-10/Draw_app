@@ -1,13 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import rough from "roughjs/bundled/rough.esm.js";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { io } from "socket.io-client";
 
 
 const Board = () => {
-  <Header />
   // Create a RoughJS generator instance
   const generator = rough.generator();
   // State for managing drawing elements and interactions
@@ -225,9 +222,8 @@ const Board = () => {
       ></canvas>
     </>
   );
-  <Footer />
-};
 
+};
 
 
 
