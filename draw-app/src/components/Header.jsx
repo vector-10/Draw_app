@@ -1,10 +1,11 @@
 import React from "react";
 
 const Header = () => {
-   return(    
-      <div className ="navbar">
-          <a href="#">Your Brand Name</a>
-      </div>
+   return(
+    
+  <div className="navbar">
+      <h1>Lotus</h1>
+  </div>
    )    
 }
 

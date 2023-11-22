@@ -1,32 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
+
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
 }
+.board{
+    height: 100vh;
+}
 
-.navbar {
-    position : fixed;
-    background-color: #333;
+.navbar, .footer {
+    background-color: #6C63FF;
     overflow: hidden;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    font-family: 'Raleway', sans-serif;
+    padding: 20px 0px;
+    font-size: 20px;
 }
-
-.footer {
-    background-color: #333;
-    overflow: hidden;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-
-}
-.navbar a, .footer a {
-    float: left;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+.navbar > h1{
+    padding: 5px 30px;
 }
 
 .footer a {
@@ -34,6 +26,7 @@ body {
     display: inline-block;
     width: 100%;
     box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
 }
 
 @media screen and (max-width: 600px) {
