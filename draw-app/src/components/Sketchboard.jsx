@@ -20,8 +20,8 @@ const Board = () => {
 
   // Listen for the 'draw' event from the server to update the drawing
   useEffect(() => {
-    // const server = "http://localhost:4000";
-    const server = "https://draw-server-cr16.onrender.com";
+    const server = "http://localhost:4000";
+    // const server = "https://draw-server-cr16.onrender.com";
     const connectionOptions = {  
       "force new connection": true,
       reconnectionAttempts: "Infinity",
